@@ -1,4 +1,4 @@
-package html_elements
+package documentTree
 
 import (
 	"golang.org/x/net/html"

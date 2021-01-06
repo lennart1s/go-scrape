@@ -1,4 +1,4 @@
-package html_elements
+package documentTree
 
 import (
 	"fmt"
