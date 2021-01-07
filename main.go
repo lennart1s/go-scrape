@@ -10,9 +10,14 @@ func main() {
 	html_code := readFile("./res/simple_example.html")
 
 	body := documentTree.GenerateDocumentTree(html_code)
-	fmt.Println(*body)
+	//fmt.Println(*body)
+	//fmt.Println(body.GetElementsByClassName("class2"))
 
-	body.QuerySelector("#my_div > .megaCoolerLink .mcl2")
+	res := body.QuerySelector("#my_div > button")
+	fmt.Println(len(res))
+	for _, r := range res {
+		fmt.Println(r)
+	}
 	//fmt.Println(body.GetElementsByTagName("button")[0])
 }
 

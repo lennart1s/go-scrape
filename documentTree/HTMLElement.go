@@ -43,6 +43,6 @@ func newHTMLElementFromSCTToken(sctToken *html.Token) *HTMLElement {
 	return e
 }
 
-func (e *HTMLElement) AppendChild(c *HTMLElement) {
-	e.Children = append(e.Children, c)
+func (e *HTMLElement) AppendChild(c ...*HTMLElement) {
+	e.Children = append(e.Children, c...)
 }
