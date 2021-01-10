@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"go-scrape/documentTree"
+	"go-scrape"
 	"io/ioutil"
 )
 
@@ -20,9 +20,9 @@ func main() {
 	} */
 	//fmt.Println(body.GetElementsByTagName("button")[0])
 
-	var mt documentTree.MyTest
+	var mt scrape.MyTest
 
-	documentTree.Unmarshal(html_code, &mt)
+	scrape.Unmarshal(html_code, &mt)
 	fmt.Println("-----")
 	fmt.Println(mt)
 }

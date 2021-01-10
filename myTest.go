@@ -1,4 +1,4 @@
-package documentTree
+package scrape
 
 type MyTest struct {
 	MeinTitel  string   `scrape:"h1, InnerHTML"`

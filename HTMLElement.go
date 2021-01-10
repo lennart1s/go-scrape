@@ -1,4 +1,4 @@
-package documentTree
+package scrape
 
 import (
 	"golang.org/x/net/html"
