@@ -93,23 +93,22 @@ func (p *HTMLElement) QuerySelector(query string) []*HTMLElement {
 
 	for _, part := range strings.Split(myQuery, ",") {
 		part = strings.TrimSpace(part)
-		fmt.Println(part)
 
 		switch {
-		case CLASS_SELECT_REGGEX.MatchString(part):
+		case ClassSelectReggex.MatchString(part):
 			hits := p.GetElementsByClassName(strings.Split(strings.TrimLeft(part, "."), ".")...)
 			validChildren = append(validChildren, hits...)
 			break
 
-		case ID_SELECT_REGGEX.MatchString(part):
+		case IDSelectReggex.MatchString(part):
 			validChildren = append(validChildren, p.GetElementByID(strings.TrimLeft(part, "#")))
 			break
 
-		case ALL_SELECT_REGGEX.MatchString(part):
+		case AllSelectReggex.MatchString(part):
 			validChildren = append(validChildren, p.Children...)
 			break
 
-		case TAG_SELECT_REGGEX.MatchString(part):
+		case TagSelectReggex.MatchString(part):
 			validChildren = append(validChildren, p.GetElementsByTagName(part)...)
 			break
 
@@ -137,10 +136,10 @@ func (p *HTMLElement) QuerySelector(query string) []*HTMLElement {
 
 var (
 	// Default Selectors
-	CLASS_SELECT_REGGEX = regexp.MustCompile(`^(\.[\w]+)+$`) // accepts multiple classes
-	ID_SELECT_REGGEX    = regexp.MustCompile(`^#[\w]+$`)
-	ALL_SELECT_REGGEX   = regexp.MustCompile(`^\*$`)
-	TAG_SELECT_REGGEX   = regexp.MustCompile(`^[\w]+$`)
+	ClassSelectReggex = regexp.MustCompile(`^(\.[\w]+)+$`) // accepts multiple classes
+	IDSelectReggex    = regexp.MustCompile(`^#[\w]+$`)
+	AllSelectReggex   = regexp.MustCompile(`^\*$`)
+	TagSelectReggex   = regexp.MustCompile(`^[\w]+$`)
 
 	// Advanced Selectors
 
