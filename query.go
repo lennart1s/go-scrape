@@ -3,6 +3,7 @@ package scrape
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -86,35 +87,70 @@ func (p *HTMLElement) GetElementsByTagName(tagName string) []*HTMLElement {
 }
 
 func (p *HTMLElement) QuerySelector(query string) []*HTMLElement {
+	// Catch 'current-element' query
+	if strings.TrimSpace(query) == "." {
+		return []*HTMLElement{p}
+	}
+
 	var validChildren []*HTMLElement
 
 	queryParts := strings.SplitN(query, ">", 2)
 	myQuery := strings.TrimSpace(queryParts[0])
 
 	for _, part := range strings.Split(myQuery, ",") {
-		part = strings.TrimSpace(part)
+		parts := strings.Split(strings.TrimSpace(part), ":")
+		part = parts[0]
+
+		var hits []*HTMLElement
 
 		switch {
 		case ClassSelectReggex.MatchString(part):
-			hits := p.GetElementsByClassName(strings.Split(strings.TrimLeft(part, "."), ".")...)
-			validChildren = append(validChildren, hits...)
+			//hits := p.GetElementsByClassName(strings.Split(strings.TrimLeft(part, "."), ".")...)
+			hits = append(hits, p.GetElementsByClassName(strings.Split(strings.TrimLeft(part, "."), ".")...)...)
+			//validChildren = append(validChildren, hits...)
 			break
 
 		case IDSelectReggex.MatchString(part):
-			validChildren = append(validChildren, p.GetElementByID(strings.TrimLeft(part, "#")))
+			//validChildren = append(validChildren, p.GetElementByID(strings.TrimLeft(part, "#")))
+			hits = append(hits, p.GetElementByID(strings.TrimLeft(part, "#")))
 			break
 
 		case AllSelectReggex.MatchString(part):
-			validChildren = append(validChildren, p.Children...)
+			//validChildren = append(validChildren, p.Children...)
+			hits = append(hits, p.Children...)
 			break
 
 		case TagSelectReggex.MatchString(part):
-			validChildren = append(validChildren, p.GetElementsByTagName(part)...)
+			//validChildren = append(validChildren, p.GetElementsByTagName(part)...)
+			hits = append(hits, p.GetElementsByTagName(part)...)
 			break
 
 		default:
 			fmt.Printf("No valid reggex found: `%v`\n", part)
 		}
+
+		if len(parts) > 1 {
+			cssTag := parts[1]
+			switch {
+			case CssNthTagReggex.MatchString(cssTag):
+				//fmt.Println("nth tag")
+				nStr := strings.SplitN(cssTag, "(", 2)[1]
+				nStr = strings.SplitN(nStr, ")", 2)[0]
+				n, _ := strconv.Atoi(nStr)
+				for i, h := 0, hits[0]; i < len(hits); {
+					if n-1 < 0 || n-1 > len(h.Parent.Children) || h.Parent.Children[n-1] != h {
+						hits = append(hits[:i], hits[i+1:]...)
+					} else {
+						i++
+					}
+				}
+				break
+			default:
+				fmt.Printf("No valid reggex found: `%v`\n", cssTag)
+			}
+		}
+
+		validChildren = append(validChildren, hits...)
 	}
 
 	if len(queryParts) == 1 {
@@ -142,6 +178,11 @@ var (
 	TagSelectReggex   = regexp.MustCompile(`^[\w]+$`)
 
 	// Advanced Selectors
+
+	// Attribute selector
+
+	// CSS Tag selectors
+	CssNthTagReggex = regexp.MustCompile(`nth-child\([0-9]+\)`)
 
 	// https://www.w3schools.com/cssref/css_selectors.asp for list of all selectors
 )

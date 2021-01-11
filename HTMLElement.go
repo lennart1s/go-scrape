@@ -46,3 +46,11 @@ func newHTMLElementFromSCTToken(sctToken *html.Token) *HTMLElement {
 func (e *HTMLElement) AppendChild(c ...*HTMLElement) {
 	e.Children = append(e.Children, c...)
 }
+
+func (e *HTMLElement) GetValue(name string) string {
+	if name == "innerHTML" {
+		return e.InnerHTML
+	} else {
+		return e.Attributes[name]
+	}
+}
