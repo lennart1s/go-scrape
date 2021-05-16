@@ -33,7 +33,7 @@ func UnmarshalHTMLTree(root *HTMLElement, o interface{}) {
 			if v.Kind() == reflect.Ptr {
 				v = v.Elem()
 			}
-			fmt.Println(v)
+			//fmt.Println(v)
 			val.Field(i).Set(v)
 		}
 

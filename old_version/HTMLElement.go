@@ -1,6 +1,8 @@
-package goscrape
+package scrape
 
-import "golang.org/x/net/html"
+import (
+	"golang.org/x/net/html"
+)
 
 type HTMLElement struct {
 	TagName string
@@ -20,14 +22,23 @@ func NewHTMLElement() *HTMLElement {
 	return &e
 }
 
-func NewHTMLELementFromToken(token html.Token) *HTMLElement {
+func newHTMLElementFromSTToken(stToken *html.Token) *HTMLElement {
 	e := NewHTMLElement()
 
-	e.TagName = token.Data
+	e.TagName = stToken.Data
 
-	for _, attr := range token.Attr {
+	e.Attributes = make(map[string]string)
+	for _, attr := range stToken.Attr {
 		e.Attributes[attr.Key] = attr.Val
 	}
+
+	return e
+}
+
+func newHTMLElementFromSCTToken(sctToken *html.Token) *HTMLElement {
+	e := NewHTMLElement()
+
+	e.TagName = sctToken.Data
 
 	return e
 }
