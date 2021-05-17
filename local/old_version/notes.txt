@@ -1,0 +1,4 @@
+- use struct tags to start at id, name or path("body/div/div/p")
+- add IDMap, NameMap and ClassMap for faster searchig
+- maybe do mutlithreded parsing
+- add support for js like htmlElement tree and go structs?
