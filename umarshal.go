@@ -88,12 +88,15 @@ func processField(field reflect.StructField, root *HTMLElement) interface{} {
 			var obj interface{}
 			if field.Type.Elem().Kind().String() == "string" {
 				obj = e.GetValue(attrib)
+				data = reflect.Append(data, reflect.ValueOf(obj))
 			} else if field.Type.Elem().Kind().String() == "struct" {
 				obj = reflect.New(field.Type.Elem()).Interface()
 				UnmarshalHTMLTree(e, obj)
+				data = reflect.Append(data, reflect.ValueOf(obj).Elem())
 			}
-			data = reflect.Append(data, reflect.ValueOf(obj).Elem())
 		}
+
+		return data.Interface()
 	default:
 		log.Printf("Invalid field type '%v' on field '%v'", fieldKind.String(), field.Name)
 	}

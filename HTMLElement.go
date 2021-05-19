@@ -1,6 +1,8 @@
 package goscrape
 
-import "golang.org/x/net/html"
+import (
+	"golang.org/x/net/html"
+)
 
 type HTMLElement struct {
 	TagName string
@@ -37,7 +39,7 @@ func (e *HTMLElement) AppendChild(c ...*HTMLElement) {
 }
 
 func (e *HTMLElement) GetValue(name string) string {
-	if name == "innerHTML" {
+	if name == "InnerHTML" {
 		return e.InnerHTML
 	} else {
 		return e.Attributes[name]
