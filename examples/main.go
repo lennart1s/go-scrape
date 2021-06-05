@@ -26,6 +26,7 @@ type ScrapeData struct {
 	BodyName   string   `scrape:"body, name"`
 	Paragraphs []string `scrape:"p, id"`
 	Ps         []string `scrape:"body>*, id"`
+	Test       string   `scrape:"#p2+button, onclick"`
 	//DivPs []string `scrape:""`
 
 	/*Name      string             `scrape:"., name"`

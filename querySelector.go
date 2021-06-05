@@ -48,29 +48,20 @@ func (p *HTMLElement) QuerySelector(query string) []*HTMLElement {
 				found = append(found, d.QuerySelector(query[newI:])...)
 			}
 			return found
-		}
 
-		/*for i := 0; i < len(query)-1; i++ {
-			if strings.ContainsRune(" >+~", rune(query[i])) {
-				switch {
-				case query[i] == ' ' && !strings.ContainsRune(" >+~", rune(query[i+1])):
-					for _, first := range p.QuerySelector(query[:i]) {
-						found = append(found, first.QuerySelector(query[i+1:])...)
-					}
-					return found
-
-				case query[i] == '>':
-					for _, first := range p.QuerySelector(query[:i]) {
-						found = append(found)
-					}
-					return found
-				case query[i] == '+':
-					break
-				case query[i] == '~':
-					break
-				}
+		case query[i] == '+':
+			query = query[1:]
+			newI := strings.IndexAny(query, " >+~")
+			if newI == -1 {
+				newI = len(query)
 			}
-		}*/
+			ns := p.getNextSibling(query[:newI])
+			if ns != nil {
+				found = append(found, ns.QuerySelector(query[newI:])...)
+			}
+			return found
+
+		}
 	} else {
 		return p.lowLevelSelector(query)
 	}
@@ -111,6 +102,23 @@ func (p *HTMLElement) getDescendant(query string) []*HTMLElement {
 	}
 
 	return found
+}
+
+func (p *HTMLElement) getNextSibling(query string) *HTMLElement {
+	for i, s := range p.Parent.Children {
+		if s == p && len(p.Parent.Children) > i+1 {
+			hits := p.Parent.lowLevelSelector(query)
+			for _, h := range hits {
+				if h == p.Parent.Children[i+1] {
+					return h
+				}
+			}
+		} else if s == p {
+			return nil
+		}
+	}
+
+	return nil
 }
 
 func (p *HTMLElement) getAllDescendants() []*HTMLElement {
